@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+  <html>
+  <head>
+    <title></title>
+    <meta charset="utf-8" />
+    <title>Open Chat room using WebSocket </title>
+    <script language="javascript" type="text/javascript">
+
+    var wsUri = "ws://localhost:9001/socket";
+    var output;
+
+
+    function init()
+    {
+      output = document.getElementById("output");
+      testWebSocket();
+    }
+
+    function testWebSocket()
+    {
+      websocket = new WebSocket(wsUri);
+      websocket.onopen = function(evt) { onOpen(evt) };
+      websocket.onclose = function(evt) { onClose(evt) };
+      websocket.onmessage = function(evt) { onMessage(evt) };
+      websocket.onerror = function(evt) { onError(evt) };
+    }
+
+    function onOpen(evt)
+    {
+      writeToScreen("CONNECTED");
+      //doSend("WebSocket rocks");
+    }
+
+    function onClose(evt)
+    {
+      writeToScreen("DISCONNECTED");
+    }
+
+    function onMessage(evt)
+    {
+      writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
+      //websocket.close();
+    }
+
+    function onError(evt)
+    {
+      writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+    }
+    function sendMessageonEnter(event) {
+      
+      if(event.which == 13 || event.keyCode == 13){
+          sendMessage();
+      }
+      else{
+          return false; // returning false will prevent the event from bubbling up.
+      }
+    }
+
+    function sendMessage()
+    {
+      var messageOb=document.getElementById('message-area');
+      var message= messageOb.value;
+      //writeToScreen("SENT: " + message);
+      websocket.send(message);
+      messageOb.value='';
+      messageOb.focus();
+    }
+
+    function doSend(message)
+    {
+      writeToScreen("SENT: " + message);
+      websocket.send(message);
+    }
+
+    function writeToScreen(message)
+    {
+      var pre = document.createElement("p");
+      pre.style.wordWrap = "break-word";
+      pre.innerHTML = message;
+      output.appendChild(pre);
+    }
+
+    window.addEventListener("load", init, false);
+
+    </script>
+  </head>
+  <body>
+     <h2>Chat room</h2>
+     <div style="width:100%;">
+        <input type="text" id="message-area" style="width:400px;padding:10px;margin:5px;float:left;" placeholder="Enter message" onkeydown="sendMessageonEnter(event)" /><input type="button" id="send-btn" onclick="sendMessage()" style="width:50px;padding:5px 10px;margin:10px;float:left;" value="Send" text="Send">       
+     </div>
+      <div id="output" style="clear:both;"></div>  
+  </body>
+  </html>
+
