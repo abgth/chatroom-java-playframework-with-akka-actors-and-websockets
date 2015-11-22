@@ -3,6 +3,7 @@ An open chat room using websockets and AKKA actors in play framework.
 
 
 `$ ./activator clean stage`
+
 `$ ./target ./target/universal/stage/bin/sockets  -Dconfig.file=/path/to/project/sockets/conf/application.conf -Dhttp.port=9001`
 
 
